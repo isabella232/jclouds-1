@@ -1,0 +1,14 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jclouds</groupId>
+        <artifactId>osgi-demo</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>osgi-demo-aws-provider</artifactId>
+    <name>JClouds demo provider registering an AWS S3 BlobStore as OSGi Service</name>
+    <description>
+        The AWS S3 BlobStore is registered in the OSGi Service Regsitry and can be used by the osgi-demo-consumer bundle.
+    </description>
+</project>
+
