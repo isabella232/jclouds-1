@@ -10,5 +10,33 @@
     <description>
         The AWS S3 BlobStore is registered in the OSGi Service Regsitry and can be used by the osgi-demo-consumer bundle.
     </description>
+    <packaging>bundle</packaging>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package/>
+                        <Import-Package>
+                            org.jclouds.*;version="${project.version}",
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 
