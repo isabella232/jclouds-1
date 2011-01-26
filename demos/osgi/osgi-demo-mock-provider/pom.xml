@@ -28,6 +28,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Activator>org.jclouds.demo.osgi.provider.mock.Activator</Bundle-Activator>
                         <Export-Package/>
                         <Import-Package>
                             org.jclouds.*;version="${project.version}",

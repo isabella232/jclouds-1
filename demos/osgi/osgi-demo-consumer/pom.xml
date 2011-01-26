@@ -11,56 +11,28 @@
         This demo is very similar to the createandlistbuckets demo, but works inside an OSGi framework.
         It uses OSGi Declarative Services for injection.
     </description>
-    <dependencies>
-        <dependency>
-            <groupId>org.jclouds.api</groupId>
-            <artifactId>s3</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+    <packaging>bundle</packaging>
 
-    <!--
     <build>
-        <finalName>${project.artifactId}</finalName>
         <plugins>
-
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.jclouds.aws.s3.samples.MainApp</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package/>
+                        <Import-Package>
+                            org.jclouds.*;version="${project.version}",
+                            *
+                        </Import-Package>
 
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.jclouds.aws.s3.samples.MainApp</mainClass>
-                        </manifest>
-                    </archive>
+                        <!-- This specifies the Declarative Services component configuration file -->
+                        <Service-Component>OSGI-INF/component.xml</Service-Component>
+                    </instructions>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
-
     </build>
-    -->
 </project>
 
