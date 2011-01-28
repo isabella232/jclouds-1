@@ -66,11 +66,14 @@ public class Component {
     public void deactivate() {
         // can do cleanup here
     }
-
+    
+    // OSGi Declarative Services calls this to inject our BlobStore to use
     public void setBlobStore(BlobStore bs) {
         blobStore = bs;
     }
 
+    // Used by OSGi Declarative Service to indicate a change in BlobStore
+    // service configuration     
     public void unsetBlobStore(BlobStore bs) {
         blobStore = null;
     }
