@@ -37,7 +37,9 @@ public class Activator implements BundleActivator {
 
     public void start(BundleContext bundleContext) throws Exception {
         String type = "transient";
-        context = new BlobStoreContextFactory().createContext(type, null);
+        String identity = "dummy";
+        String credential = "dummy";
+        context = new BlobStoreContextFactory().createContext(type, identity, credential);
         BlobStore blobStore = context.getBlobStore();
         
         Dictionary<String, Object> svcProps = new Hashtable<String, Object>();

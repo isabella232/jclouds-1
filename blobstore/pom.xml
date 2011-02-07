@@ -31,6 +31,7 @@
     </parent>
     <artifactId>jclouds-blobstore</artifactId>
     <name>jclouds blobstore core</name>
+    <packaging>bundle</packaging>
     <description>jclouds components to access blobstore</description>
 
     <scm>
@@ -116,6 +117,18 @@
                         <exclude>**/*IntegrationTest.java</exclude>
                         <exclude>**/*LiveTest.java</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package>org.jclouds.blobstore.*;version="${project.version}"</Export-Package>
+                        <Import-Package>org.jclouds;version="${project.version}",org.jclouds.*;version="${project.version}",*</Import-Package>
+                        <_nouses>true</_nouses>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,0 +1,51 @@
+Quick Start
+
+Step-by-step instructions to deploy jclouds OSGi demo (tested with felix-3.0.8). For your convenience, all deps and compiled project bundles (steps 2 and 3) can be downloaded here [1].
+
+1. Add to felix/bundles [2]
+
+Config Admin
+File Install
+SCR (Declarative Services)
+
+2. create dir felix/load and add the jar files below
+
+- generated with wrap command [3]
+oauth-20100527.bar
+bcprov-jdk15-1.44.bar
+java-xmlbuilder-0.3.jar
+
+- downloaded from eclipse orbit [4]
+javax.inject_1.0.0.v20091030.jar
+org.aopalliance_1.0.0.v200905130917.jar
+
+- downloaded from guava osgi [5]
+com.google.guava_7.0.0.jar
+
+- dependencies "as-is"
+guice-3.0-rc2.jar
+jersey-core-1.4.jar
+gson-1.6.jar
+
+3. compile and copy bundles from following jclouds projects
+
+jclouds/core
+jclouds/common/aws
+jclouds/blobstore
+jclouds/apis/s3
+jclouds/demos/osgi/osgi-demo-mock-provider
+jclouds/demos/osgi-demo-consumer
+
+4. run the framework, all bundles in load dir will be automatically installed and started
+
+java -jar bin/felix.jar
+
+[1] https://docs.google.com/leaf?id=0B2mHeflRHzcHMmQ0NWRmZGItZDYyNy00NGMxLWIxYTEtOTJhZmQ3ZjZmZGRl&sort=name&layout=list&num=50
+
+[2] http://felix.apache.org/site/downloads.cgi
+
+[3] mvn org.apache.felix:maven-bundle-plugin:wrap -DpomFile=[path to pom file] -Dfile=[path to jar file]
+
+[4] http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/
+
+[5] http://code.google.com/p/guava-osgi/
