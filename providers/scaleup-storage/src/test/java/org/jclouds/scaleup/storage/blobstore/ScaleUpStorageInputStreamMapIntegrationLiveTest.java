@@ -19,13 +19,13 @@
 
 package org.jclouds.scaleup.storage.blobstore;
 
-import org.jclouds.blobstore.integration.internal.BaseInputStreamMapIntegrationTest;
+import org.jclouds.s3.blobstore.integration.S3InputStreamMapIntegrationLiveTest;
 import org.testng.annotations.Test;
 
 /**
  * @author Adrian Cole
  */
 @Test(groups =  "live", testName = "ScaleUpStorageInputStreamMapIntegrationLiveTest")
-public class ScaleUpStorageInputStreamMapIntegrationLiveTest extends BaseInputStreamMapIntegrationTest {
+public class ScaleUpStorageInputStreamMapIntegrationLiveTest extends S3InputStreamMapIntegrationLiveTest {
 
 }

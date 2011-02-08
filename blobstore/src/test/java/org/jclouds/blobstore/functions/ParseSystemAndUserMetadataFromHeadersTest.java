@@ -55,14 +55,14 @@ public class ParseSystemAndUserMetadataFromHeadersTest {
    @BeforeTest
    void setUp() {
       parser = new ParseSystemAndUserMetadataFromHeaders(blobMetadataProvider, new SimpleDateFormatDateService(),
-            "prefix", "default");
+               "prefix");
       parser.setName("key");
    }
 
    @Test
    public void testApplySetsName() {
       HttpResponse from = new HttpResponse(200, "ok", Payloads.newStringPayload(""), ImmutableMultimap.of(
-            HttpHeaders.LAST_MODIFIED, "Wed, 09 Sep 2009 19:50:23 GMT"));
+               HttpHeaders.LAST_MODIFIED, "Wed, 09 Sep 2009 19:50:23 GMT"));
       from.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
       from.getPayload().getContentMetadata().setContentLength(100l);
       BlobMetadata metadata = parser.apply(from);
@@ -72,20 +72,32 @@ public class ParseSystemAndUserMetadataFromHeadersTest {
    @Test
    public void testNoContentOn204IsOk() {
       HttpResponse from = new HttpResponse(204, "ok", Payloads.newStringPayload(""), ImmutableMultimap.of(
-            HttpHeaders.LAST_MODIFIED, "Wed, 09 Sep 2009 19:50:23 GMT"));
+               HttpHeaders.LAST_MODIFIED, "Wed, 09 Sep 2009 19:50:23 GMT"));
       parser.apply(from);
    }
 
    @Test
    public void testSetLastModified() {
       HttpResponse from = new HttpResponse(200, "ok", Payloads.newStringPayload(""), ImmutableMultimap.of(
-            HttpHeaders.LAST_MODIFIED, "Wed, 09 Sep 2009 19:50:23 GMT"));
+               HttpHeaders.LAST_MODIFIED, "Wed, 09 Sep 2009 19:50:23 GMT"));
       MutableBlobMetadata metadata = blobMetadataProvider.get();
       parser.parseLastModifiedOrThrowException(from, metadata);
-      assertEquals(metadata.getLastModified(),
-            new SimpleDateFormatDateService().rfc822DateParse("Wed, 09 Sep 2009 19:50:23 GMT"));
+      assertEquals(metadata.getLastModified(), new SimpleDateFormatDateService()
+               .rfc822DateParse("Wed, 09 Sep 2009 19:50:23 GMT"));
    }
 
+
+   @Test
+   public void testSetLastModifiedIso8601() {
+      HttpResponse from = new HttpResponse(200, "ok", Payloads.newStringPayload(""), ImmutableMultimap.of(
+               HttpHeaders.LAST_MODIFIED, "2011-01-28T17:35:08.000+0000"));
+      MutableBlobMetadata metadata = blobMetadataProvider.get();
+      parser.parseLastModifiedOrThrowException(from, metadata);
+      assertEquals(metadata.getLastModified(), new SimpleDateFormatDateService()
+               .iso8601DateParse("2011-01-28T17:35:08.000Z"));
+   }
+
+   
    @Test(expectedExceptions = HttpException.class)
    public void testSetLastModifiedException() {
       HttpResponse from = new HttpResponse(200, "ok", Payloads.newStringPayload(""));
@@ -96,7 +108,7 @@ public class ParseSystemAndUserMetadataFromHeadersTest {
    @Test
    public void testAddETagTo() {
       HttpResponse from = new HttpResponse(200, "ok", Payloads.newStringPayload(""), ImmutableMultimap.of(
-            HttpHeaders.ETAG, "0xfeb"));
+               HttpHeaders.ETAG, "0xfeb"));
       MutableBlobMetadata metadata = blobMetadataProvider.get();
       parser.addETagTo(from, metadata);
       assertEquals(metadata.getETag(), "0xfeb");
@@ -105,7 +117,7 @@ public class ParseSystemAndUserMetadataFromHeadersTest {
    @Test
    public void testAddUserMetadataTo() {
       HttpResponse from = new HttpResponse(200, "ok", Payloads.newStringPayload(""), ImmutableMultimap.of("prefix"
-            + "key", "value"));
+               + "key", "value"));
       MutableBlobMetadata metadata = blobMetadataProvider.get();
       parser.addUserMetadataTo(from, metadata);
       assertEquals(metadata.getUserMetadata().get("key"), "value");

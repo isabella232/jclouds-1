@@ -110,20 +110,26 @@ public class ViComputeServiceContextModule
    @Provides
    @Singleton
    protected ServiceInstance createConnection(JcloudsWSClient client,
-            @Named(Constants.PROPERTY_IDENTITY) String identity, @Named(Constants.PROPERTY_CREDENTIAL) String credential)
-            throws RemoteException, MalformedURLException {
-      return new ServiceInstance(client, identity, credential);
+            @Named(Constants.PROPERTY_IDENTITY) String identity,
+            @Named(Constants.PROPERTY_CREDENTIAL) String credential,
+            @Named(Constants.PROPERTY_TRUST_ALL_CERTS) boolean ignoreCertificate) throws RemoteException,
+            MalformedURLException {
+      // uncomment this to use jclouds http commands
+      // return new ServiceInstance(client, identity, credential, ignoreCertificate);
+      return new ServiceInstance(new WSClient(client.getBaseUrl().toString(), ignoreCertificate), identity, credential,
+               ignoreCertificate + "");
    }
 
    @Singleton
-   static class JcloudsWSClient extends WSClient {
+   public static class JcloudsWSClient extends WSClient {
 
       private final HttpClient client;
 
       @Inject
       public JcloudsWSClient(HttpClient client, @Provider URI baseUrl,
-               @Named(PROPERTY_VI_XML_NAMESPACE) String vimNameSpace) throws MalformedURLException {
-         super(baseUrl.toASCIIString(), false);
+               @Named(PROPERTY_VI_XML_NAMESPACE) String vimNameSpace,
+               @Named(Constants.PROPERTY_TRUST_ALL_CERTS) boolean ignoreCert) throws MalformedURLException {
+         super(baseUrl.toASCIIString(), ignoreCert);
          this.setVimNameSpace(vimNameSpace);
          this.client = client;
       }
@@ -144,7 +150,6 @@ public class ViComputeServiceContextModule
             Throwables.propagate(e);
             return null;// unreachable as the above line will throw the exception.
          }
-
          HttpResponse response = client.invoke(request);
 
          if (getCookie() != null && response.getFirstHeaderOrNull(HttpHeaders.SET_COOKIE) != null) {
@@ -153,6 +158,7 @@ public class ViComputeServiceContextModule
 
          return response.getPayload().getInput();
       }
+
    }
 
    @Override

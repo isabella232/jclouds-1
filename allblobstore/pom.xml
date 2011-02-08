@@ -46,12 +46,12 @@
         </dependency>
         <dependency>
             <groupId>org.jclouds.provider</groupId>
-            <artifactId>synaptic-storage</artifactId>
+            <artifactId>scaleup-storage</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jclouds.provider</groupId>
-            <artifactId>scaleup-storage</artifactId>
+            <artifactId>synaptic-storage</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -66,7 +66,7 @@
         </dependency>
         <dependency>
             <groupId>org.jclouds.provider</groupId>
-            <artifactId>ecc-s3</artifactId>
+            <artifactId>eucalyptus-partnercloud-s3</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

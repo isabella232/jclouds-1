@@ -36,7 +36,7 @@
 
     <properties>
         <test.trmk-ecloud.endpoint>https://services.enterprisecloud.terremark.com/api</test.trmk-ecloud.endpoint>
-        <test.trmk-ecloud.apiversion>0.8b-ext2.6</test.trmk-ecloud.apiversion>
+        <test.trmk-ecloud.apiversion>0.8b-ext2.7</test.trmk-ecloud.apiversion>
         <test.trmk-ecloud.identity>FIXME</test.trmk-ecloud.identity>
         <test.trmk-ecloud.credential>FIXME</test.trmk-ecloud.credential>
     </properties>
@@ -95,6 +95,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.42</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
@@ -118,6 +124,7 @@
                                     <goal>test</goal>
                                 </goals>
                                 <configuration>
+                                    <threadCount>1</threadCount>
                                     <systemProperties>
                                         <property>
                                             <name>test.trmk-ecloud.endpoint</name>

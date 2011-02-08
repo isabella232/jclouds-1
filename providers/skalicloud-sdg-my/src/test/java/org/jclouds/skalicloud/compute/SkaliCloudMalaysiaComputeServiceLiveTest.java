@@ -31,7 +31,6 @@ public class SkaliCloudMalaysiaComputeServiceLiveTest extends ElasticStackComput
 
    public SkaliCloudMalaysiaComputeServiceLiveTest() {
       provider = "skalicloud-sdg-my";
-      tag = "skalicloud";
    }
 
 }

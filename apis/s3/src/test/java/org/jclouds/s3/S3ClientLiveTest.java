@@ -86,6 +86,12 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
+   protected URL getObjectURL(String containerName, String key) throws Exception {
+      URL url = new URL(String.format("http://%s.%s/%s", containerName, context.getProviderSpecificContext()
+               .getEndpoint().getHost(), key));
+      return url;
+   }
+
    public void testPutCannedAccessPolicyPublic() throws Exception {
       String containerName = getContainerName();
       try {
@@ -97,7 +103,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
          withAcl(CannedAccessPolicy.PUBLIC_READ));
 
-         URL url = new URL(String.format("http://%1$s.s3.amazonaws.com/%2$s", containerName, key));
+         URL url = this.getObjectURL(containerName, key);
          Strings2.toStringAndClose(url.openStream());
       } finally {
          returnContainer(containerName);
@@ -117,8 +123,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
          validateContent(destinationContainer, destinationKey);
 
-         URL url = new URL(String.format("http://%1$s.s3.amazonaws.com/%2$s", destinationContainer,
-                  destinationKey));
+         URL url = getObjectURL(destinationContainer, destinationKey);
          Strings2.toStringAndClose(url.openStream());
 
       } finally {
@@ -130,8 +135,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    String sourceKey = "apples";
    String destinationKey = "pears";
 
-   public void testPublicWriteOnObject() throws InterruptedException, ExecutionException,
-            TimeoutException, IOException {
+   public void testPublicWriteOnObject() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       final String publicReadWriteObjectKey = "public-read-write-acl";
       final String containerName = getContainerName();
       try {
@@ -139,14 +143,14 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          object.getMetadata().setKey(publicReadWriteObjectKey);
          object.setPayload("");
          // Public Read-Write object
-         getApi().putObject(containerName, object,
-                  new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ_WRITE));
+         getApi()
+                  .putObject(containerName, object,
+                           new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ_WRITE));
 
          assertConsistencyAware(new Runnable() {
             public void run() {
                try {
-                  AccessControlList acl = getApi().getObjectACL(containerName,
-                           publicReadWriteObjectKey);
+                  AccessControlList acl = getApi().getObjectACL(containerName, publicReadWriteObjectKey);
                   assertEquals(acl.getGrants().size(), 3);
                   assertEquals(acl.getPermissions(GroupGranteeURI.ALL_USERS).size(), 2);
                   assertTrue(acl.getOwner() != null);
@@ -168,8 +172,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
    }
 
-   public void testUpdateObjectACL() throws InterruptedException, ExecutionException,
-            TimeoutException, IOException {
+   public void testUpdateObjectACL() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       String containerName = getContainerName();
       try {
          String objectKey = "private-acl";
@@ -214,8 +217,8 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
    }
 
-   public void testPrivateAclIsDefaultForObject() throws InterruptedException, ExecutionException,
-            TimeoutException, IOException {
+   public void testPrivateAclIsDefaultForObject() throws InterruptedException, ExecutionException, TimeoutException,
+            IOException {
       String privateObjectKey = "private-acl";
       String containerName = getContainerName();
       try {
@@ -233,16 +236,14 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
    }
 
-   public void testPublicReadOnObject() throws InterruptedException, ExecutionException,
-            TimeoutException, IOException {
+   public void testPublicReadOnObject() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       final String publicReadObjectKey = "public-read-acl";
       final String containerName = getContainerName();
       try {
          S3Object object = getApi().newS3Object();
          object.getMetadata().setKey(publicReadObjectKey);
          object.setPayload("");
-         getApi().putObject(containerName, object,
-                  new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ));
+         getApi().putObject(containerName, object, new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ));
 
          assertConsistencyAware(new Runnable() {
             public void run() {
@@ -275,8 +276,8 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       return getApi().putObject(sourceContainer, sourceObject);
    }
 
-   protected S3Object validateObject(String sourceContainer, String key)
-            throws InterruptedException, ExecutionException, TimeoutException, IOException {
+   protected S3Object validateObject(String sourceContainer, String key) throws InterruptedException,
+            ExecutionException, TimeoutException, IOException {
       assertConsistencyAwareContainerSize(sourceContainer, 1);
       S3Object newObject = getApi().getObject(sourceContainer, key);
       assert newObject != null;
@@ -297,13 +298,24 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          getApi().putObject(containerName, object);
 
          S3Object newObject = validateObject(containerName, key);
-
-         assertEquals(newObject.getMetadata().getCacheControl(), "no-cache");
+         assertCacheControl(newObject, "no-cache");
          assertEquals(newObject.getMetadata().getContentMetadata().getContentDisposition(),
                   "attachment; filename=hello.txt");
       } finally {
          returnContainer(containerName);
       }
+   }
+
+   protected void assertCacheControl(S3Object newObject, String string) {
+      assert (newObject.getMetadata().getCacheControl().indexOf(string) != -1) : newObject.getMetadata()
+               .getCacheControl();
+   }
+
+   protected void assertContentEncoding(S3Object newObject, String string) {
+      assert (newObject.getPayload().getContentMetadata().getContentEncoding().indexOf(string) != -1) : newObject
+               .getPayload().getContentMetadata().getContentEncoding();
+      assert (newObject.getMetadata().getContentMetadata().getContentEncoding().indexOf(string) != -1) : newObject
+               .getMetadata().getContentMetadata().getContentEncoding();
    }
 
    @Test(groups = { "integration", "live" })
@@ -318,8 +330,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       try {
          getApi().putObject(containerName, object);
          S3Object newObject = validateObject(containerName, key);
-
-         assertEquals(newObject.getMetadata().getContentMetadata().getContentEncoding(), "x-compress");
+         assertContentEncoding(newObject, "x-compress");
       } finally {
          returnContainer(containerName);
       }
@@ -342,16 +353,15 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   protected String addToContainerAndValidate(String containerName, String sourceKey)
-            throws InterruptedException, ExecutionException, TimeoutException, IOException {
+   protected String addToContainerAndValidate(String containerName, String sourceKey) throws InterruptedException,
+            ExecutionException, TimeoutException, IOException {
       String etag = addBlobToContainer(containerName, sourceKey);
       validateContent(containerName, sourceKey);
       return etag;
    }
 
    // TODO: fails on linux and windows
-   public void testCopyIfModifiedSince() throws InterruptedException, ExecutionException,
-            TimeoutException, IOException {
+   public void testCopyIfModifiedSince() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       String containerName = getContainerName();
       String destinationContainer = getContainerName();
       try {
@@ -359,13 +369,13 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          addToContainerAndValidate(containerName, sourceKey + "mod");
          Date after = new Date(System.currentTimeMillis() + 1000);
 
-         getApi().copyObject(containerName, sourceKey + "mod", destinationContainer,
-                  destinationKey, ifSourceModifiedSince(before));
+         getApi().copyObject(containerName, sourceKey + "mod", destinationContainer, destinationKey,
+                  ifSourceModifiedSince(before));
          validateContent(destinationContainer, destinationKey);
 
          try {
-            getApi().copyObject(containerName, sourceKey + "mod", destinationContainer,
-                     destinationKey, ifSourceModifiedSince(after));
+            getApi().copyObject(containerName, sourceKey + "mod", destinationContainer, destinationKey,
+                     ifSourceModifiedSince(after));
          } catch (HttpResponseException ex) {
             assertEquals(ex.getResponse().getStatusCode(), 412);
          }
@@ -377,8 +387,8 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    }
 
    // TODO: fails on linux and windows
-   public void testCopyIfUnmodifiedSince() throws InterruptedException, ExecutionException,
-            TimeoutException, IOException {
+   public void testCopyIfUnmodifiedSince() throws InterruptedException, ExecutionException, TimeoutException,
+            IOException {
       String containerName = getContainerName();
       String destinationContainer = getContainerName();
       try {
@@ -391,8 +401,8 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          validateContent(destinationContainer, destinationKey);
 
          try {
-            getApi().copyObject(containerName, sourceKey + "un", destinationContainer,
-                     destinationKey, ifSourceModifiedSince(before));
+            getApi().copyObject(containerName, sourceKey + "un", destinationContainer, destinationKey,
+                     ifSourceModifiedSince(before));
          } catch (HttpResponseException ex) {
             assertEquals(ex.getResponse().getStatusCode(), 412);
          }
@@ -402,8 +412,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   public void testCopyIfMatch() throws InterruptedException, ExecutionException, TimeoutException,
-            IOException {
+   public void testCopyIfMatch() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       String containerName = getContainerName();
       String destinationContainer = getContainerName();
       try {
@@ -425,8 +434,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   public void testCopyIfNoneMatch() throws IOException, InterruptedException, ExecutionException,
-            TimeoutException {
+   public void testCopyIfNoneMatch() throws IOException, InterruptedException, ExecutionException, TimeoutException {
       String containerName = getContainerName();
       String destinationContainer = getContainerName();
       try {
@@ -448,8 +456,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   public void testCopyWithMetadata() throws InterruptedException, ExecutionException,
-            TimeoutException, IOException {
+   public void testCopyWithMetadata() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       String containerName = getContainerName();
       String destinationContainer = getContainerName();
       try {

@@ -19,13 +19,20 @@
 
 package org.jclouds.scaleup.storage.blobstore;
 
-import org.jclouds.blobstore.integration.internal.BaseServiceIntegrationTest;
+import java.util.Set;
+
+import org.jclouds.s3.blobstore.integration.S3ServiceIntegrationLiveTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author Adrian Cole
  */
-@Test(groups =  "live", testName = "ScaleUpStorageServiceIntegrationLiveTest")
-public class ScaleUpStorageServiceIntegrationLiveTest extends BaseServiceIntegrationTest {
-
+@Test(groups = "live", testName = "ScaleUpStorageServiceIntegrationLiveTest")
+public class ScaleUpStorageServiceIntegrationLiveTest extends S3ServiceIntegrationLiveTest {
+   @Override
+   protected Set<String> getIso3166Codes() {
+      return ImmutableSet.<String> of("DE");
+   }
 }

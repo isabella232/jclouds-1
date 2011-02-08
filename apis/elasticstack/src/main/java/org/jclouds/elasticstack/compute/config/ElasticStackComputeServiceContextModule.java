@@ -52,12 +52,14 @@ import org.jclouds.elasticstack.predicates.DriveClaimed;
 import org.jclouds.functions.IdentityFunction;
 import org.jclouds.json.Json;
 import org.jclouds.location.Provider;
+import org.jclouds.location.suppliers.OnlyLocationOrFirstZone;
 import org.jclouds.predicates.RetryablePredicate;
 import org.jclouds.util.Strings2;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
 import com.google.common.collect.MapMaker;
 import com.google.common.collect.Maps;
 import com.google.inject.Provides;
@@ -68,14 +70,14 @@ import com.google.inject.TypeLiteral;
  * @author Adrian Cole
  */
 public class ElasticStackComputeServiceContextModule
-      extends
-      ComputeServiceAdapterContextModule<ElasticStackClient, ElasticStackAsyncClient, ServerInfo, Hardware, DriveInfo, Location> {
+         extends
+         ComputeServiceAdapterContextModule<ElasticStackClient, ElasticStackAsyncClient, ServerInfo, Hardware, DriveInfo, Location> {
 
    public ElasticStackComputeServiceContextModule() {
       super(ElasticStackClient.class, ElasticStackAsyncClient.class);
    }
 
-   @SuppressWarnings({ "unchecked", "rawtypes" })
+   @SuppressWarnings( { "unchecked", "rawtypes" })
    @Override
    protected void configure() {
       super.configure();
@@ -97,6 +99,8 @@ public class ElasticStackComputeServiceContextModule
       }).to(FindImageForId.class);
       bind(new TypeLiteral<Function<DriveInfo, Image>>() {
       }).to(WellKnownImageToImage.class);
+      bind(new TypeLiteral<Supplier<Location>>() {
+      }).to(OnlyLocationOrFirstZone.class);
    }
 
    @Provides
@@ -123,10 +127,9 @@ public class ElasticStackComputeServiceContextModule
    @Singleton
    @Provides
    protected Map<String, WellKnownImage> provideImages(Json json, @Provider String providerName) throws IOException {
-      List<WellKnownImage> wellKnowns = json.fromJson(
-            Strings2.toStringAndClose(getClass().getResourceAsStream("/"+providerName+"/preinstalled_images.json")),
-            new TypeLiteral<List<WellKnownImage>>() {
-            }.getType());
+      List<WellKnownImage> wellKnowns = json.fromJson(Strings2.toStringAndClose(getClass().getResourceAsStream(
+               "/" + providerName + "/preinstalled_images.json")), new TypeLiteral<List<WellKnownImage>>() {
+      }.getType());
       return Maps.uniqueIndex(wellKnowns, new Function<WellKnownImage, String>() {
 
          @Override
@@ -140,8 +143,8 @@ public class ElasticStackComputeServiceContextModule
    @Provides
    @Singleton
    protected Predicate<DriveInfo> supplyDriveUnclaimed(DriveClaimed driveClaimed,
-         ComputeServiceConstants.Timeouts timeouts) {
+            ComputeServiceConstants.Timeouts timeouts) {
       return new RetryablePredicate<DriveInfo>(Predicates.not(driveClaimed), timeouts.nodeRunning, 1000,
-            TimeUnit.MILLISECONDS);
+               TimeUnit.MILLISECONDS);
    }
 }

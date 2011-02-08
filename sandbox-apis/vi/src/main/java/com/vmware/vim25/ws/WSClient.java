@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package com.vmware.vim25.ws;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,11 +39,15 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.List;
+import java.util.Map.Entry;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -54,19 +59,15 @@ import javax.net.ssl.X509TrustManager;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.jclouds.util.Strings2;
 
 import com.vmware.vim25.ManagedObjectReference;
 
-import java.rmi.RemoteException;
-
 /** 
- * 
- * Patched to include logging
- * 
  * The Web Service Engine
  * @author Steve Jin (sjin@vmware.com)
 */
-
+// MARKED NOT FINAL
 public class WSClient
 {
   private final static String SOAP_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><soapenv:Body>"; 
@@ -84,7 +85,7 @@ public class WSClient
   
   public WSClient(String serverUrl) throws MalformedURLException 
   {
-	this(serverUrl, true);
+      this(serverUrl, true);
   }
   
   public WSClient(String serverUrl, boolean ignoreCert) throws MalformedURLException 
@@ -129,7 +130,7 @@ public class WSClient
     
     if(resp.getName().indexOf("Fault")!=-1)
     {
-    	SoapFaultException sfe = null;
+      SoapFaultException sfe = null;
       try 
       {
         sfe = XmlGen.parseSoapFault(resp);
@@ -144,7 +145,7 @@ public class WSClient
       }
       else
       {
-      	throw sfe;
+            throw sfe;
       }
     }
     else
@@ -178,7 +179,7 @@ public class WSClient
       is = post(soapMsg);
       SAXReader reader = new SAXReader();
       Document doc = reader.read(is);
-	    root = doc.getRootElement();
+          root = doc.getRootElement();
     } catch (Exception e) 
     {
       throw new RemoteException("VI SDK invoke exception:" + e);
@@ -212,7 +213,7 @@ public class WSClient
     sb.append(SOAP_HEADER);
 
     sb.append("<" + methodName + vimNameSpace);
-		
+            
     for(int i=0; i<paras.length; i++)
     {
       String key = paras[i].getName();
@@ -251,6 +252,18 @@ public class WSClient
 
     OutputStream os = postCon.getOutputStream();
     OutputStreamWriter out = new OutputStreamWriter(os);
+    // PRINT REQUEST
+    try {
+       System.out.printf("%s %s HTTP/1.1%n", "POST", baseUrl.toURI().toASCIIString());
+       System.out.printf("%s: %s%n", SOAP_ACTION_HEADER, soapAction);
+       if(cookie!=null)
+          System.out.printf("%s: %s%n", "Cookie", cookie);
+       System.out.println(soapMsg);
+
+    } catch (URISyntaxException e1) {
+    }
+    
+    // END PRINT REQUEST
 
     out.write(soapMsg);
     out.close();
@@ -259,17 +272,32 @@ public class WSClient
     
     try
     {
-    	is = postCon.getInputStream();
+      is = postCon.getInputStream();
     } 
     catch(IOException ioe)
     {
-    	is = postCon.getErrorStream();
+      is = postCon.getErrorStream();
     }
     
     if(cookie==null)
     {
       cookie = postCon.getHeaderField("Set-Cookie");
     }
+    
+    // PRINT RESPONSE
+
+    System.out.printf("HTTP/1.1 %d %s", postCon.getResponseCode(), postCon.getResponseMessage());
+
+    for (Entry<String, List<String>> i : postCon.getHeaderFields().entrySet()) {
+       for (String v : i.getValue())
+          System.out.printf("%s: %s%n", i.getKey(), v);
+    }
+    String response = Strings2.toStringAndClose(is);
+    System.out.println(response);
+    is = new ByteArrayInputStream(response.getBytes());
+    
+    // END PRINT RESPONSE
+    
     return is;
   }
   

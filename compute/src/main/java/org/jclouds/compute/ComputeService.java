@@ -20,12 +20,14 @@
 package org.jclouds.compute;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.jclouds.compute.domain.ComputeMetadata;
+import org.jclouds.compute.domain.ExecResponse;
+import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.internal.BaseComputeService;
@@ -33,7 +35,7 @@ import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.io.Payload;
-import org.jclouds.ssh.ExecResponse;
+import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Predicate;
 import com.google.inject.ImplementedBy;
@@ -97,8 +99,8 @@ public interface ComputeService {
 
    /**
     * 
-    * The compute api treats nodes as a group based on a tag you specify. Using this tag, you can
-    * choose to operate one or many nodes as a logical unit without regard to the implementation
+    * The compute api treats nodes as a group based on the name you specify. Using this group, you
+    * can choose to operate one or many nodes as a logical unit without regard to the implementation
     * details of the cloud.
     * <p/>
     * 
@@ -118,7 +120,7 @@ public interface ComputeService {
     * If resources such as security groups are needed, they will be reused or created for you.
     * Inbound port 22 will always be opened up.
     * 
-    * @param tag
+    * @param group
     *           - common identifier to group nodes by, cannot contain hyphens
     * @param count
     *           - how many to fire up.
@@ -130,19 +132,38 @@ public interface ComputeService {
     *            when there's a problem applying options to nodes. Note that successful and failed
     *            nodes are a part of this exception, so be sure to inspect this carefully.
     */
+   Set<? extends NodeMetadata> createNodesInGroup(String group, int count, Template template) throws RunNodesException;
+
+   /**
+    * Like {@link ComputeService#createNodesInGroup(String,int,Template)}, except that the template
+    * is default, equivalent to {@code templateBuilder().any().options(templateOptions)}.
+    */
+   Set<? extends NodeMetadata> createNodesInGroup(String group, int count, TemplateOptions templateOptions)
+            throws RunNodesException;
+
+   /**
+    * Like {@link ComputeService#createNodesInGroup(String,int,TemplateOptions)}, except that the
+    * options are default, as specified in {@link ComputeService#templateOptions}.
+    */
+   Set<? extends NodeMetadata> createNodesInGroup(String group, int count) throws RunNodesException;
+
+   /**
+    * @see #createNodesInGroup(String , int , Template )
+    */
+   @Deprecated
    Set<? extends NodeMetadata> runNodesWithTag(String tag, int count, Template template) throws RunNodesException;
 
    /**
-    * Like {@link ComputeService#runNodesWithTag(String,int,Template)}, except that the template is
-    * default, equivalent to {@code templateBuilder().any().options(templateOptions)}.
+    * @see #createNodesInGroup(String , int , TemplateOptions )
     */
+   @Deprecated
    Set<? extends NodeMetadata> runNodesWithTag(String tag, int count, TemplateOptions templateOptions)
-         throws RunNodesException;
+            throws RunNodesException;
 
    /**
-    * Like {@link ComputeService#runNodesWithTag(String,int,TemplateOptions)}, except that the
-    * options are default, as specified in {@link ComputeService#templateOptions}.
+    * @see #createNodesInGroup(String , int )
     */
+   @Deprecated
    Set<? extends NodeMetadata> runNodesWithTag(String tag, int count) throws RunNodesException;
 
    /**
@@ -165,6 +186,8 @@ public interface ComputeService {
     * 
     * @throws UnsupportedOperationException
     *            if the underlying provider doesn't support suspend/resume
+    * @throws NoSuchElementException
+    *            if no nodes matched the predicate specified
     */
    void resumeNodesMatching(Predicate<NodeMetadata> filter);
 
@@ -188,6 +211,11 @@ public interface ComputeService {
     * <h4>note</h4>
     * 
     * affected nodes may not resume with the same IP address(es)
+    * 
+    * @throws UnsupportedOperationException
+    *            if the underlying provider doesn't support suspend/resume
+    * @throws NoSuchElementException
+    *            if no nodes matched the predicate specified
     */
    void suspendNodesMatching(Predicate<NodeMetadata> filter);
 
@@ -214,6 +242,9 @@ public interface ComputeService {
    /**
     * nodes matching the filter are treated as a logical set. Using this command, you can save time
     * by rebooting the nodes in parallel.
+    * 
+    * @throws NoSuchElementException
+    *            if no nodes matched the predicate specified
     */
    void rebootNodesMatching(Predicate<NodeMetadata> filter);
 
@@ -232,32 +263,61 @@ public interface ComputeService {
    Set<? extends NodeMetadata> listNodesDetailsMatching(Predicate<ComputeMetadata> filter);
 
    /**
-    * Runs the script without any additional options
-    * 
-    * @see #runScriptOnNodesMatching(Predicate, Payload,
-    *      org.jclouds.compute.options.RunScriptOptions)
-    * @see org.jclouds.compute.predicates.NodePredicates#runningWithTag(String)
+    * @see org.jclouds.io.Payloads
+    * @see ComputeService#runScriptOnNodesMatching(Predicate, Statement, RunScriptOptions)
     */
+   @Deprecated
    Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter, Payload runScript)
-         throws RunScriptOnNodesException;
+            throws RunScriptOnNodesException;
 
    /**
-    * Run the script on all nodes with the specific tag.
+    * @see org.jclouds.io.Payloads
+    * @see ComputeService#runScriptOnNodesMatching(Predicate, Statement, RunScriptOptions)
+    */
+   @Deprecated
+   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter,
+            Payload runScript, RunScriptOptions options) throws RunScriptOnNodesException;
+
+   /**
+    * 
+    * @see ComputeService#runScriptOnNodesMatching(Predicate, Statement, RunScriptOptions)
+    */
+   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter, String runScript)
+            throws RunScriptOnNodesException;
+
+   /**
+    * 
+    * @see ComputeService#runScriptOnNodesMatching(Predicate, Statement, RunScriptOptions)
+    */
+   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter,
+            Statement runScript) throws RunScriptOnNodesException;
+
+   /**
+    * 
+    * @see ComputeService#runScriptOnNodesMatching(Predicate, Statement, RunScriptOptions)
+    */
+   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter, String runScript,
+            RunScriptOptions options) throws RunScriptOnNodesException;
+
+   /**
+    * Run the script on all nodes with the specific predicate.
     * 
     * @param filter
     *           Predicate-based filter to define on which nodes the script is to be executed
     * @param runScript
-    *           payload containing the script to run
+    *           statement containing the script to run
     * @param options
     *           nullable options to how to run the script, whether to override credentials
     * @return map with node identifiers and corresponding responses
+    * @throws NoSuchElementException
+    *            if no nodes matched the predicate specified
     * @throws RunScriptOnNodesException
     *            if anything goes wrong during script execution
     * 
     * @see org.jclouds.compute.predicates.NodePredicates#runningWithTag(String)
-    * @see org.jclouds.io.Payloads
+    * @see org.jclouds.scriptbuilder.domain.Statements
     */
    Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter,
-         Payload runScript, RunScriptOptions options) throws RunScriptOnNodesException;
+            Statement runScript, RunScriptOptions options) throws RunScriptOnNodesException;
 
 }

@@ -31,12 +31,17 @@
     <dependencies>
         <dependency>
             <groupId>org.jclouds.provider</groupId>
-            <artifactId>ecc-ec2</artifactId>
+            <artifactId>eucalyptus-partnercloud-ec2</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jclouds.provider</groupId>
             <artifactId>aws-ec2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jclouds.api</groupId>
+            <artifactId>byon</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -141,7 +146,7 @@
         </dependency>
         <dependency>
             <groupId>org.jclouds.provider</groupId>
-            <artifactId>cloudsigma</artifactId>
+            <artifactId>cloudsigma-zrh</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

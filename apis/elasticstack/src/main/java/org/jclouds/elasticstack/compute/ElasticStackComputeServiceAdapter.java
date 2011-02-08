@@ -6,7 +6,6 @@ import static com.google.common.collect.Iterables.filter;
 import static org.jclouds.concurrent.FutureIterables.transformParallel;
 import static org.jclouds.elasticstack.util.Servers.small;
 
-import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -29,8 +28,6 @@ import org.jclouds.compute.domain.internal.VolumeImpl;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
-import org.jclouds.domain.LocationScope;
-import org.jclouds.domain.internal.LocationImpl;
 import org.jclouds.elasticstack.ElasticStackAsyncClient;
 import org.jclouds.elasticstack.ElasticStackClient;
 import org.jclouds.elasticstack.domain.Device;
@@ -39,9 +36,10 @@ import org.jclouds.elasticstack.domain.DriveInfo;
 import org.jclouds.elasticstack.domain.ImageConversionType;
 import org.jclouds.elasticstack.domain.Server;
 import org.jclouds.elasticstack.domain.ServerInfo;
+import org.jclouds.elasticstack.domain.ServerStatus;
 import org.jclouds.elasticstack.domain.WellKnownImage;
 import org.jclouds.elasticstack.reference.ElasticStackConstants;
-import org.jclouds.location.Provider;
+import org.jclouds.location.suppliers.JustProvider;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
@@ -57,14 +55,13 @@ import com.google.common.collect.ImmutableSet.Builder;
  */
 @Singleton
 public class ElasticStackComputeServiceAdapter implements
-      ComputeServiceAdapter<ServerInfo, Hardware, DriveInfo, Location> {
+         ComputeServiceAdapter<ServerInfo, Hardware, DriveInfo, Location> {
    private final ElasticStackClient client;
    private final ElasticStackAsyncClient aclient;
    private final Predicate<DriveInfo> driveNotClaimed;
    private final Map<String, WellKnownImage> preinstalledImages;
    private final Map<String, DriveInfo> cache;
-   private final String providerName;
-   private final URI providerURI;
+   private final JustProvider locationSupplier;
    private final String defaultVncPassword;
    private final ExecutorService executor;
 
@@ -74,15 +71,14 @@ public class ElasticStackComputeServiceAdapter implements
 
    @Inject
    public ElasticStackComputeServiceAdapter(ElasticStackClient client, ElasticStackAsyncClient aclient,
-         Predicate<DriveInfo> driveNotClaimed, @Provider String providerName, @Provider URI providerURI,
-         Map<String, WellKnownImage> preinstalledImages, Map<String, DriveInfo> cache,
-         @Named(ElasticStackConstants.PROPERTY_VNC_PASSWORD) String defaultVncPassword,
-         @Named(Constants.PROPERTY_USER_THREADS) ExecutorService executor) {
+            Predicate<DriveInfo> driveNotClaimed,  JustProvider locationSupplier, 
+            Map<String, WellKnownImage> preinstalledImages, Map<String, DriveInfo> cache,
+            @Named(ElasticStackConstants.PROPERTY_VNC_PASSWORD) String defaultVncPassword,
+            @Named(Constants.PROPERTY_USER_THREADS) ExecutorService executor) {
       this.client = checkNotNull(client, "client");
       this.aclient = checkNotNull(aclient, "aclient");
       this.driveNotClaimed = checkNotNull(driveNotClaimed, "driveNotClaimed");
-      this.providerName = checkNotNull(providerName, "providerName");
-      this.providerURI = checkNotNull(providerURI, "providerURI");
+      this.locationSupplier = checkNotNull(locationSupplier, "locationSupplier");
       this.preinstalledImages = checkNotNull(preinstalledImages, "preinstalledImages");
       this.cache = checkNotNull(cache, "cache");
       this.defaultVncPassword = checkNotNull(defaultVncPassword, "defaultVncPassword");
@@ -90,12 +86,12 @@ public class ElasticStackComputeServiceAdapter implements
    }
 
    @Override
-   public ServerInfo runNodeWithTagAndNameAndStoreCredentials(String tag, String name, Template template,
-         Map<String, Credentials> credentialStore) {
+   public ServerInfo createNodeWithGroupEncodedIntoNameThenStoreCredentials(String tag, String name, Template template,
+            Map<String, Credentials> credentialStore) {
       long bootSize = (long) (template.getHardware().getVolumes().get(0).getSize() * 1024 * 1024 * 1024l);
       logger.debug(">> creating boot drive bytes(%d)", bootSize);
       DriveInfo drive = client.createDrive(new Drive.Builder().name(template.getImage().getName()).size(bootSize)
-            .build());
+               .build());
       logger.debug("<< drive(%s)", drive.getUuid());
 
       logger.debug(">> imaging boot drive source(%s)", template.getImage().getId());
@@ -106,12 +102,13 @@ public class ElasticStackComputeServiceAdapter implements
          client.destroyDrive(drive.getUuid());
          throw new IllegalStateException("could not image drive in time!");
       }
-      Server toCreate = small(name, drive.getUuid(), defaultVncPassword).mem(template.getHardware().getRam())
-            .cpu((int) (template.getHardware().getProcessors().get(0).getSpeed())).build();
+      Server toCreate = small(name, drive.getUuid(), defaultVncPassword).mem(template.getHardware().getRam()).cpu(
+               (int) (template.getHardware().getProcessors().get(0).getSpeed())).build();
 
       ServerInfo from = client.createAndStartServer(toCreate);
       // store the credentials so that later functions can use them
-      credentialStore.put(from.getUuid() + "", new Credentials("toor", from.getVnc().getPassword()));
+      credentialStore.put(from.getUuid() + "", new Credentials(template.getImage().getDefaultCredentials().identity,
+               from.getVnc().getPassword()));
       return from;
    }
 
@@ -135,8 +132,8 @@ public class ElasticStackComputeServiceAdapter implements
                   return "sizeLessThanOrEqual(" + size + ")";
                }
 
-            }).ids(id).ram(ram).processors(ImmutableList.of(new Processor(1, cpu)))
-                  .volumes(ImmutableList.<Volume> of(new VolumeImpl(size, true, true))).build());
+            }).ids(id).ram(ram).processors(ImmutableList.of(new Processor(1, cpu))).volumes(
+                     ImmutableList.<Volume> of(new VolumeImpl(size, true, true))).build());
          }
       return hardware.build();
    }
@@ -147,14 +144,14 @@ public class ElasticStackComputeServiceAdapter implements
    @Override
    public Iterable<DriveInfo> listImages() {
       Iterable<DriveInfo> drives = transformParallel(preinstalledImages.keySet(),
-            new Function<String, Future<DriveInfo>>() {
+               new Function<String, Future<DriveInfo>>() {
 
-               @Override
-               public Future<DriveInfo> apply(String input) {
-                  return aclient.getDriveInfo(input);
-               }
+                  @Override
+                  public Future<DriveInfo> apply(String input) {
+                     return aclient.getDriveInfo(input);
+                  }
 
-            }, executor, null, logger, "drives");
+               }, executor, null, logger, "drives");
       Iterable<DriveInfo> returnVal = filter(drives, notNull());
       for (DriveInfo drive : returnVal)
          cache.put(drive.getUuid(), drive);
@@ -166,11 +163,11 @@ public class ElasticStackComputeServiceAdapter implements
    public Iterable<ServerInfo> listNodes() {
       return (Iterable<ServerInfo>) client.listServerInfo();
    }
-
+   
+   @SuppressWarnings("unchecked")
    @Override
    public Iterable<Location> listLocations() {
-      return ImmutableSet.<Location> of(new LocationImpl(LocationScope.PROVIDER, providerName, providerURI
-            .toASCIIString(), null));
+      return (Iterable<Location>) locationSupplier.get();
    }
 
    @Override
@@ -182,6 +179,8 @@ public class ElasticStackComputeServiceAdapter implements
    public void destroyNode(String id) {
       ServerInfo server = getNode(id);
       if (server != null) {
+         if (server.getStatus() != ServerStatus.STOPPED)
+            client.stopServer(id);
          client.destroyServer(id);
          for (Device dev : server.getDevices().values())
             client.destroyDrive(dev.getDriveUuid());

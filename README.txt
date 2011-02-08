@@ -30,10 +30,10 @@ our current version is 1.0-beta-8
 our dev version is 1.0-SNAPSHOT
  
 our compute api supports: aws-ec2, gogrid, cloudservers (generic), cloudservers-us,
-                          cloudservers-uk, vcloud (generic), ec2 (generic),
+                          cloudservers-uk, vcloud (generic), ec2 (generic), byon,
                           trmk-ecloud, trmk-vcloudexpress, eucalyptus (generic),
-                          cloudsigma, elasticstack(generic), bluelock-vclouddirector,
-                          slicehost, ecc-ec2, elastichosts-lon-p (Peer 1), 
+                          cloudsigma-zrh, elasticstack(generic), bluelock-vclouddirector,
+                          slicehost, eucalyptus-partnercloud-ec2, elastichosts-lon-p (Peer 1), 
                           elastichosts-sat-p (Peer 1), elastichosts-lon-b (BlueSquare),
                           openhosting-east1, serverlove-z1-man, skalicloud-sdg-my,
                           vcloudexpress (generic), stub (in-memory)
@@ -42,16 +42,17 @@ our compute api supports: aws-ec2, gogrid, cloudservers (generic), cloudservers-
            to all of these providers
 
 our blobstore api supports: aws-s3, cloudfiles (generic), cloudfiles-us, cloudfiles-uk,
-                            azureblob, atmos (generic), synaptic-storage, 
+                            azureblob, atmos (generic), synaptic-storage, scaleup-storage,
                             cloudonestorage, s3 (generic), walrus(generic), googlestorage, 
-                            scaleup-storage, ecc-s3, swift (generic), transient (in-mem),
+                            eucalyptus-partnercloud-s3, swift (generic), transient (in-mem), 
                             filesystem (on-disk)
  
   * note * the pom dependency org.jclouds/jclouds-allblobstore gives you access to
            to all of these providers
 
 we also have support for: ibmdev, mezeo, nirvanix, boxdotnet, rimuhosting, openstack nova,
-                          azurequeue, simpledb as well a number of features the sandbox
+                          azurequeue, simpledb, scaleup-storage as well as a async-http-client
+                          driver in the sandbox
 
 
 If you want access to all jclouds components, include the maven dependency org.jclouds/jclouds-all
@@ -94,7 +95,7 @@ Compute Example (Java):
   template = client.templateBuilder().osFamily(UBUNTU).smallest().build();
  
   // these nodes will be accessible via ssh when the call returns
-  nodes = client.runNodesWithTag("mycluster", 2, template);
+  nodes = client.createNodesInGroup("mycluster", 2, template);
 
 Compute Example (Clojure):
   (use 'org.jclouds.compute)
@@ -106,7 +107,7 @@ Compute Example (Clojure):
   ; use the default node template and launch a couple nodes
   ; these will have your ~/.ssh/id_rsa.pub authorized when complete
   (with-compute-service [compute]
-    (run-nodes "mycluster" 2))
+    (create-nodes "mycluster" 2))
  
 Downloads:
   * distribution zip: http://jclouds.googlecode.com/files/jclouds-1.0-beta-8.zip

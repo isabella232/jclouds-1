@@ -22,6 +22,8 @@ package org.jclouds.serverlove.compute;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.testng.Assert.assertEquals;
 
+import java.util.Set;
+
 import org.jclouds.compute.BaseTemplateBuilderLiveTest;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
@@ -29,6 +31,7 @@ import org.jclouds.compute.domain.os.OsFamilyVersion64Bit;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * 
@@ -47,11 +50,19 @@ public class ServerloveManchesterTemplateBuilderLiveTest extends BaseTemplateBui
 
          @Override
          public boolean apply(OsFamilyVersion64Bit input) {
-            return ((input.family == OsFamily.RHEL) || //
-                     (input.family == OsFamily.CENTOS && !(input.version.equals("5.5") && input.is64Bit)) || //
-                     (input.family == OsFamily.UBUNTU && !(input.version.equals("10.10") && input.is64Bit)) || //
-            (input.family == OsFamily.WINDOWS) //
-            );
+            switch (input.family) {
+               case UBUNTU:
+                  return !(input.version.equals("") && input.is64Bit)
+                           && !(input.version.equals("10.04") && input.is64Bit);
+               case CENTOS:
+                  return !(input.version.equals("") && input.is64Bit)
+                           && !(input.version.equals("5.5") && input.is64Bit);
+               case WINDOWS:
+                  return !(input.version.equals("") && input.is64Bit)
+                           && !(input.version.equals("2008 R2") && input.is64Bit);
+               default:
+                  return true;
+            }
          }
 
       };
@@ -61,10 +72,14 @@ public class ServerloveManchesterTemplateBuilderLiveTest extends BaseTemplateBui
    public void testTemplateBuilder() {
       Template defaultTemplate = this.context.getComputeService().templateBuilder().build();
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "10.10");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "10.04");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
       assertEquals(defaultTemplate.getLocation().getId(), "serverlove-z1-man");
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
    }
 
+   @Override
+   protected Set<String> getIso3166Codes() {
+      return ImmutableSet.<String> of("GB-MAN");
+   }
 }

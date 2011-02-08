@@ -19,13 +19,20 @@
 
 package org.jclouds.rackspace.cloudfiles.blobstore.integration;
 
-import org.jclouds.openstack.swift.blobstore.integration.SwiftServiceIntegrationLiveTest;
+import java.util.Set;
+
+import org.jclouds.cloudfiles.blobstore.integration.CloudFilesServiceIntegrationLiveTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author Adrian Cole
  */
-@Test(groups =  "live", testName = "CloudFilesUSServiceIntegrationLiveTest")
-public class CloudFilesUSServiceIntegrationLiveTest extends SwiftServiceIntegrationLiveTest {
-
+@Test(groups = "live", testName = "CloudFilesUSServiceIntegrationLiveTest")
+public class CloudFilesUSServiceIntegrationLiveTest extends CloudFilesServiceIntegrationLiveTest {
+   @Override
+   protected Set<String> getIso3166Codes() {
+      return ImmutableSet.<String> of("US-IL", "US-TX");
+   }
 }

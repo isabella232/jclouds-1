@@ -19,22 +19,40 @@
 
 package org.jclouds.scaleup.storage.blobstore;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
+import static org.testng.Assert.assertEquals;
 
-import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
+import java.io.IOException;
+
+import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.s3.blobstore.integration.S3BlobIntegrationLiveTest;
 import org.testng.annotations.Test;
 
 /**
  * @author Adrian Cole
  */
-@Test(groups =  "live", testName = "ScaleUpStorageBlobIntegrationLiveTest")
-public class ScaleUpStorageBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
+@Test(groups = "live", testName = "ScaleUpStorageBlobIntegrationLiveTest")
+public class ScaleUpStorageBlobIntegrationLiveTest extends S3BlobIntegrationLiveTest {
 
+
+   // no support for content language
    @Override
-   @Test(expectedExceptions = IllegalArgumentException.class)
-   public void testPutObjectStream() throws InterruptedException, IOException, ExecutionException {
-      super.testPutObjectStream();
+   protected void checkContentLanguage(Blob blob, String contentLanguage) {
+      assert blob.getPayload().getContentMetadata().getContentLanguage() == null;
+      assert blob.getMetadata().getContentMetadata().getContentLanguage() == null;
+   }
+
+   // double range not supported
+   @Test(groups = { "integration", "live" })
+   @Override
+   public void testGetTwoRanges() throws InterruptedException, IOException {
+
+   }
+
+   // no md5
+   @Override
+   protected void checkMD5(BlobMetadata metadata) throws IOException {
+      assertEquals(metadata.getContentMetadata().getContentMD5(), null);
    }
 
 }

@@ -20,7 +20,8 @@
   (:require
    [clojure.contrib.logging :as logging])
   (:import
-   [org.jclouds.ssh SshClient ExecResponse]
+   org.jclouds.ssh.SshClient
+   org.jclouds.compute.domain.ExecResponse
    com.google.inject.Module
    com.google.common.collect.ImmutableSet
    org.jclouds.domain.Credentials
@@ -39,7 +40,7 @@
     (class ComputeService)
     (defrecord ClojureComputeServiceAdapter []
           org.jclouds.compute.JCloudsNativeComputeServiceAdapter
-          (^NodeMetadata runNodeWithTagAndNameAndStoreCredentials [this ^String tag ^String name ^Template template ^Map credentialStore]
+          (^NodeMetadata createNodeWithGroupEncodedIntoNameThenStoreCredentials [this ^String group ^String name ^Template template ^Map credentialStore]
             ())
           (^Iterable listNodes [this ]
             ())
@@ -64,7 +65,7 @@
   (.createContext (ComputeServiceContextFactory.)  spec))
 
 (^RestContextSpec defn context-spec [^StandaloneComputeServiceContextModule module]
-  (StandaloneComputeServiceContextSpec. "servermanager", "http://host", "1", "identity", "credential", module, (ImmutableSet/of)))
+  (StandaloneComputeServiceContextSpec. "servermanager", "http://host", "1", "", "identity", "credential", module, (ImmutableSet/of)))
 
 (defrecord NodeListComputeService
     [node-list]

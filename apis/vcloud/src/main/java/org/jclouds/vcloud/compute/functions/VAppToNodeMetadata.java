@@ -20,7 +20,7 @@
 package org.jclouds.vcloud.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.compute.util.ComputeServiceUtils.parseTagFromName;
+import static org.jclouds.compute.util.ComputeServiceUtils.parseGroupFromName;
 import static org.jclouds.vcloud.compute.util.VCloudComputeUtils.getCredentialsFrom;
 import static org.jclouds.vcloud.compute.util.VCloudComputeUtils.getPrivateIpsFromVApp;
 import static org.jclouds.vcloud.compute.util.VCloudComputeUtils.getPublicIpsFromVApp;
@@ -28,6 +28,7 @@ import static org.jclouds.vcloud.compute.util.VCloudComputeUtils.toComputeOs;
 
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -36,6 +37,7 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.domain.NodeState;
 import org.jclouds.domain.Credentials;
+import org.jclouds.logging.Logger;
 import org.jclouds.vcloud.domain.Status;
 import org.jclouds.vcloud.domain.VApp;
 
@@ -46,6 +48,9 @@ import com.google.common.base.Function;
  */
 @Singleton
 public class VAppToNodeMetadata implements Function<VApp, NodeMetadata> {
+   @Resource
+   protected static Logger logger = Logger.NULL;
+
    protected final FindLocationForResource findLocationForResourceInVDC;
    protected final Function<VApp, Hardware> hardwareForVApp;
    protected final Map<Status, NodeState> vAppStatusToNodeState;
@@ -66,7 +71,7 @@ public class VAppToNodeMetadata implements Function<VApp, NodeMetadata> {
       builder.uri(from.getHref());
       builder.name(from.getName());
       builder.location(findLocationForResourceInVDC.apply(from.getVDC()));
-      builder.tag(parseTagFromName(from.getName()));
+      builder.group(parseGroupFromName(from.getName()));
       builder.operatingSystem(toComputeOs(from, null));
       builder.hardware(hardwareForVApp.apply(from));
       builder.state(vAppStatusToNodeState.get(from.getStatus()));

@@ -19,6 +19,7 @@
 
 package org.jclouds.compute.util;
 
+import static org.jclouds.compute.util.ComputeServiceUtils.parseGroupFromName;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
@@ -38,6 +39,11 @@ import com.google.common.collect.ImmutableMultimap;
 @Test(groups = "unit")
 public class ComputeServiceUtilsTest {
 
+   @Test
+   public void testParseTagFromName() {
+      assertEquals(parseGroupFromName("gogrid--849"), "gogrid-");
+
+   }
    @Test
    public void testExecHttpResponse() {
       HttpRequest request = new HttpRequest("GET", URI.create("https://adriancolehappy.s3.amazonaws.com/java/install"),
