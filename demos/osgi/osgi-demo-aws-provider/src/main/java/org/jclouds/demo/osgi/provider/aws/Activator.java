@@ -38,7 +38,7 @@ public class Activator implements BundleActivator {
     private BlobStoreContext context;
 
     public void start(BundleContext bundleContext) throws Exception {
-        String type = "s3";
+        String type = "aws-s3";
         
         // Obtain the ID and key somehow. These could come from an API, a file or 
         // possibly the OSGi Configuration Admin Service...

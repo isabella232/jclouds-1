@@ -20,7 +20,7 @@ javax.inject_1.0.0.v20091030.jar
 org.aopalliance_1.0.0.v200905130917.jar
 
 - downloaded from guava osgi [5]
-com.google.guava_7.0.0.jar
+com.google.guava_8.0.0.jar
 
 - dependencies "as-is"
 guice-3.0-rc2.jar

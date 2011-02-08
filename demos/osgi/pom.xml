@@ -21,8 +21,8 @@
     
     <dependencies>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
-            <artifactId>s3</artifactId>
+            <groupId>org.jclouds.provider</groupId>
+            <artifactId>aws-s3</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
