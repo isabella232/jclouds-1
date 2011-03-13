@@ -18,15 +18,15 @@ package org.jclouds.demo.osgi.provider.aws;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.swing.JOptionPane;
-
-import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
-import org.jclouds.blobstore.BlobStoreContextFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ManagedServiceFactory;
 
 /**
  * This OSGi Bundle Activator registers a AWS S3 BlobStore in the OSGi Service Registry.
@@ -34,28 +34,18 @@ import org.osgi.framework.ServiceRegistration;
  * @author David Bosschaert
  */
 public class Activator implements BundleActivator {
-    private ServiceRegistration reg;
-    private BlobStoreContext context;
+	
+	private BundleContext bundleContext;
 
     public void start(BundleContext bundleContext) throws Exception {
-        String type = "aws-s3";
-        
-        // Obtain the ID and key somehow. These could come from an API, a file or 
-        // possibly the OSGi Configuration Admin Service...
-        String accesskeyid = JOptionPane.showInputDialog("Please provide the access key ID");
-        String secretkey = JOptionPane.showInputDialog("Please enter the Secret Key");
-        
-        context = new BlobStoreContextFactory().createContext(type, accesskeyid, secretkey);
-        BlobStore blobStore = context.getBlobStore();
-        
-        Dictionary<String, Object> svcProps = new Hashtable<String, Object>();
-        // Register the type as a service property so that the consumer can filter based on this.
-        svcProps.put("type", type);
-        reg = bundleContext.registerService(BlobStore.class.getName(), blobStore, svcProps);
+    	this.bundleContext = bundleContext;
+    	Dictionary<String, Object> svcProps = new Hashtable<String, Object>();
+    	svcProps.put(Constants.SERVICE_PID, "org.jclouds.demo.osgi.provider.aws.BlobStoreServiceFactory");
+    	AWSServiceFactory serviceFactory = new AWSServiceFactory(bundleContext);
+    	bundleContext.registerService(ManagedServiceFactory.class.getName(), serviceFactory, svcProps);
     }
     
     public void stop(BundleContext bundleContext) throws Exception {
-        reg.unregister();
-        context.close();
     }
+
 }

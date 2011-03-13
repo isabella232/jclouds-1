@@ -18,6 +18,11 @@
             <artifactId>org.osgi.core</artifactId>
             <version>4.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <version>4.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -30,10 +35,9 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Activator>org.jclouds.demo.osgi.provider.aws.Activator</Bundle-Activator>
                         <Export-Package/>
-                        <Import-Package>
-                            org.jclouds.*;version="${project.version}",
-                            *
-                        </Import-Package>
+                        <Import-Package>org.jclouds.location;version="${project.version}",
+                        				org.jclouds.*;version="${project.version}",
+                        				*</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

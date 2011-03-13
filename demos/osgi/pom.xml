@@ -14,15 +14,26 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>osgi-demo-mock-provider</module>
         <module>osgi-demo-aws-provider</module>
+		<module>osgi-demo-compute-factory</module>
         <module>osgi-demo-consumer</module>
+        <module>osgi-demo-logservice</module>
     </modules>
     
     <dependencies>
         <dependency>
             <groupId>org.jclouds.provider</groupId>
             <artifactId>aws-s3</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jclouds.provider</groupId>
+            <artifactId>aws-s3</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-compute</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
