@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="JClouds OSGi Demo using Declarative Services">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.osgi.clouds.demo.component">
    <implementation class="org.jclouds.demo.osgi.consumer.Component"/>
    <reference bind="setBlobStore" unbind="unsetBlobStore" cardinality="1..1" interface="org.jclouds.blobstore.BlobStore"/>
+   <reference bind="setS3Client" unbind="unsetS3Client" cardinality="1..1" interface="org.jclouds.s3.S3Client"/>
 </scr:component>

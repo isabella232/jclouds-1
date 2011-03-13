@@ -22,13 +22,11 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package/>
-                        <Import-Package>
-                            org.jclouds.*;version="${project.version}",
-                            *
-                        </Import-Package>
+                        <Import-Package>org.jclouds.*;version="${project.version}",
+                            			*;resolution:=optional</Import-Package>
 
                         <!-- This specifies the Declarative Services component configuration file -->
-                        <Service-Component>OSGI-INF/component.xml</Service-Component>
+                        <Service-Component>OSGI-INF/*.xml</Service-Component>
                     </instructions>
                 </configuration>
             </plugin>

@@ -1,0 +1,18 @@
+<appender name="COMPUTEFILE" class="org.apache.log4j.DailyRollingFileAppender">
+	<param name="File" value="logs/jclouds-compute.log" />
+	<param name="Append" value="true" />
+	<param name="DatePattern" value="'.'yyyy-MM-dd" />
+	<param name="Threshold" value="TRACE" />
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %-5p [%c] (%t) %m%n" />
+	</layout>
+</appender>
+
+<appender name="ASYNCCOMPUTE" class="org.apache.log4j.AsyncAppender">
+	<appender-ref ref="COMPUTEFILE" />
+</appender>
+
+<category name="jclouds.compute">
+	<priority value="TRACE" />
+	<appender-ref ref="ASYNCCOMPUTE" />
+</category>

@@ -20,12 +20,11 @@ package org.jclouds.demo.osgi.consumer;
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.s3.S3Client;
 
 /**
  * The main component for the OSGi Demo
@@ -37,11 +36,13 @@ import org.jclouds.blobstore.domain.StorageType;
  */
 public class Component {
     private BlobStore blobStore;
+    private S3Client s3Client;
 
-    public void activate() {        
+    public void activate() {
         try {
+    		System.out.println("Blobstore initialization...");
             // Create Container
-            String containerName = JOptionPane.showInputDialog("Please Specify Container Name");
+            String containerName = "testbucketmeo";
             blobStore.createContainerInLocation(null, containerName);
             
             // Add Blob
@@ -58,6 +59,9 @@ public class Component {
                     System.out.printf("  %s: %s entries%n", resourceMd.getName(), containerMap.size());
                 }
             }
+            
+			// Use Provider API
+			System.out.printf("  location: %s", s3Client.getBucketLocation(containerName));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,12 +73,25 @@ public class Component {
     
     // OSGi Declarative Services calls this to inject our BlobStore to use
     public void setBlobStore(BlobStore bs) {
+    	System.out.println("Setting blobstore");
         blobStore = bs;
     }
 
     // Used by OSGi Declarative Service to indicate a change in BlobStore
     // service configuration     
     public void unsetBlobStore(BlobStore bs) {
+    	System.out.println("Unsetting blobstore");
         blobStore = null;
     }
+    
+    public void setS3Client(S3Client s3c) {
+    	System.out.println("Setting S3Client");
+    	s3Client = s3c;
+    }
+    
+    public void unsetS3Client(S3Client s3c) {
+    	System.out.println("Unsetting S3Client");
+    	s3Client = null;
+    }
+
 }
