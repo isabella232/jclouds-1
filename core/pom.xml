@@ -156,9 +156,9 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.jclouds.*;version="${project.version}"</Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
-                        <_nouses>true</_nouses>
+                        <Export-Package>com.google.gson;-split-package:=merge-first,
+				                        org.jclouds.*;version=${project.version}</Export-Package>
+						<_nouses>true</_nouses>
                     </instructions>
                 </configuration>
             </plugin>

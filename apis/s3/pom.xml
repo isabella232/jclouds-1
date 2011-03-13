@@ -154,7 +154,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>org.jclouds.s3.*;version="${project.version}"</Export-Package>
                         <Import-Package>org.jclouds.*;version="${project.version}",*</Import-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Fragment-Host>jclouds-core;version="${project.version}"</Fragment-Host>
                         <_nouses>true</_nouses>
                     </instructions>
                 </configuration>
