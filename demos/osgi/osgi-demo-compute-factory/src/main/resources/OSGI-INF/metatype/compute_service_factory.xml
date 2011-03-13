@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
+  <OCD description="JClouds provider registering an ComputeService as OSGi Service" name="JClouds ComputeService OSGi Provider" id="osgi.demo.compute.factory">
+    <AD name="Provider" id="provider" required="true" type="String"/>
+    <AD name="Identity" id="identity" required="true" type="String"/>
+    <AD name="Credentials" id="credential" required="true" type="String"/>
+  </OCD>
+  <Designate factoryPid="org.jclouds.demo.osgi.provider.compute.ComputeServiceFactory" pid="org.jclouds.demo.osgi.provider.compute.ComputeServiceFactory">
+    <Object ocdref="osgi.demo.compute.factory"/>
+  </Designate>
+</metatype:MetaData>
