@@ -29,7 +29,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.driver</groupId>
+    <groupId>org.fusesource.jclouds.driver</groupId>
     <artifactId>jclouds-apachehc</artifactId>
     <name>jclouds Apache Http Components Client</name>
     <packaging>jar</packaging>

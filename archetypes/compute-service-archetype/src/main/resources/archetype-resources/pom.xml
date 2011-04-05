@@ -87,13 +87,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-jsch</artifactId>
             <version>${symbol_dollar}{project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${symbol_dollar}{project.version}</version>
             <scope>test</scope>

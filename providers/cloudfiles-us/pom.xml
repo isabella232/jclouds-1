@@ -29,7 +29,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.provider</groupId>
+    <groupId>org.fusesource.jclouds.provider</groupId>
     <artifactId>cloudfiles-us</artifactId>
     <name>jclouds CloudFiles US provider</name>
     <description>CloudFiles implementation targeted to Rackspace US</description>
@@ -44,20 +44,20 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>cloudfiles</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>swift</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>cloudfiles</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
@@ -78,7 +78,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

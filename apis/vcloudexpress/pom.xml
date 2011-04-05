@@ -28,7 +28,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.api</groupId>
+    <groupId>org.fusesource.jclouds.api</groupId>
     <artifactId>vcloudexpress</artifactId>
     <name>jcloud vcloudexpress api</name>
     <description>jclouds components to access an implementation of VMWare vCloud Express</description>
@@ -44,12 +44,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jclouds.common</groupId>
+            <groupId>org.fusesource.jclouds.common</groupId>
             <artifactId>vcloud-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.common</groupId>
+            <groupId>org.fusesource.jclouds.common</groupId>
             <artifactId>vcloud-common</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
@@ -75,7 +75,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-jsch</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -93,7 +93,7 @@
            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

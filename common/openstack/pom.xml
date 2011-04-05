@@ -28,7 +28,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.common</groupId>
+    <groupId>org.fusesource.jclouds.common</groupId>
     <artifactId>openstack-common</artifactId>
     <name>jclouds Rackspace Components Core</name>
     <description>jclouds Core components to access Rackspace apis</description>

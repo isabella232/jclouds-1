@@ -30,122 +30,122 @@
     <name>allcompute</name>
     <dependencies>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>eucalyptus-partnercloud-ec2</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>aws-ec2</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>byon</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>ec2</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>cloudservers-us</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>cloudservers-uk</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>cloudservers</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>vcloud</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>vcloudexpress</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>trmk-vcloudexpress</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>trmk-ecloud</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>trmk-vcloudexpress</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>trmk-ecloud</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>bluelock-vcdirector</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>gogrid</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>slicehost</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>elasticstack</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>elastichosts-lon-p</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>elastichosts-sat-p</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>elastichosts-lon-b</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>openhosting-east1</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>serverlove-z1-man</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>skalicloud-sdg-my</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>cloudsigma-zrh</artifactId>
             <version>${project.version}</version>
         </dependency>

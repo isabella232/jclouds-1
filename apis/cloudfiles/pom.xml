@@ -29,7 +29,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.api</groupId>
+    <groupId>org.fusesource.jclouds.api</groupId>
     <artifactId>cloudfiles</artifactId>
     <name>jcloud cloudfiles api</name>
     <description>jclouds components to access an implementation of CloudFiles</description>
@@ -44,7 +44,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>swift</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -56,7 +56,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.common</groupId>
+            <groupId>org.fusesource.jclouds.common</groupId>
             <artifactId>openstack-common</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
@@ -70,14 +70,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>swift</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

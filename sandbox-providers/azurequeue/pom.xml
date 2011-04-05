@@ -29,7 +29,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.provider</groupId>
+    <groupId>org.fusesource.jclouds.provider</groupId>
     <artifactId>azurequeue</artifactId>
     <name>jcloud azurequeue provider</name>
     <description>jclouds components to access Azure Queue Service</description>
@@ -43,7 +43,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jclouds.common</groupId>
+            <groupId>org.fusesource.jclouds.common</groupId>
             <artifactId>azure-common</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
@@ -56,7 +56,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

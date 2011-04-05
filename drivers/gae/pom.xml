@@ -27,7 +27,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.driver</groupId>
+    <groupId>org.fusesource.jclouds.driver</groupId>
     <artifactId>jclouds-gae</artifactId>
     <name>jclouds Google App Engine Components</name>
     <description>Google App Engine Components</description>

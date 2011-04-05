@@ -29,7 +29,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.driver</groupId>
+    <groupId>org.fusesource.jclouds.driver</groupId>
     <artifactId>jclouds-bouncycastle</artifactId>
     <name>jclouds bouncycastle EncryptionService Module</name>
     <description>jclouds bouncycastle EncryptionService Module</description>

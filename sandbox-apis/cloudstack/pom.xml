@@ -30,7 +30,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.api</groupId>
+    <groupId>org.fusesource.jclouds.api</groupId>
     <artifactId>cloudstack</artifactId>
     <name>jclouds cloudstack core</name>
     <description>jclouds components to access cloudstack</description>
@@ -66,7 +66,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-jsch</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -84,7 +84,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

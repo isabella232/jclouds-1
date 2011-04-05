@@ -71,7 +71,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -83,7 +83,7 @@
             <scope>test</scope>
         </dependency>        
         <dependency>
-            <groupId>org.jclouds.provider</groupId>
+            <groupId>org.fusesource.jclouds.provider</groupId>
             <artifactId>aws-s3</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -103,7 +103,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-gae</artifactId>
             <version>${project.version}</version>
         </dependency>

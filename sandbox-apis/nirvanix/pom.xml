@@ -28,7 +28,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.provider</groupId>
+    <groupId>org.fusesource.jclouds.provider</groupId>
     <artifactId>nirvanix</artifactId>
     <name>jclouds nirvanix storage delivery network core</name>
     <description>jclouds Core components to access nirvanix nirvanix</description>
@@ -82,7 +82,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jclouds.driver</groupId>
+            <groupId>org.fusesource.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

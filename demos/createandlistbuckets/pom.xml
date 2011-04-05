@@ -32,7 +32,7 @@
 	<description>jclouds S3 sample that creates a bucket then lists all owned buckets</description>
     <dependencies>
         <dependency>
-            <groupId>org.jclouds.api</groupId>
+            <groupId>org.fusesource.jclouds.api</groupId>
             <artifactId>s3</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -32,7 +32,7 @@
 	<description>jclouds simpledb sample that putAttributes and select it</description>
         <dependencies>
             <dependency>
-                <groupId>org.jclouds.api</groupId>
+                <groupId>org.fusesource.jclouds.api</groupId>
                 <artifactId>simpledb</artifactId>
                 <version>${project.version}</version>
             </dependency>

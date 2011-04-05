@@ -28,7 +28,7 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../project/pom.xml</relativePath>
     </parent>
-    <groupId>org.jclouds.api</groupId>
+    <groupId>org.fusesource.jclouds.api</groupId>
     <artifactId>jclouds-apis-project</artifactId>
     <packaging>pom</packaging>
     <name>jclouds apis project</name>

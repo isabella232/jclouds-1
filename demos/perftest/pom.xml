@@ -47,7 +47,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jclouds.api</groupId>
+			<groupId>org.fusesource.jclouds.api</groupId>
 			<artifactId>s3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -62,22 +62,22 @@
 			<version>0.8.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jclouds.driver</groupId>
+			<groupId>org.fusesource.jclouds.driver</groupId>
 			<artifactId>jclouds-enterprise</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jclouds.driver</groupId>
+			<groupId>org.fusesource.jclouds.driver</groupId>
 			<artifactId>jclouds-apachehc</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jclouds.driver</groupId>
+			<groupId>org.fusesource.jclouds.driver</groupId>
 			<artifactId>jclouds-gae</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jclouds.api</groupId>
+			<groupId>org.fusesource.jclouds.api</groupId>
 			<artifactId>s3</artifactId>
 			<version>${project.version}</version>
 			<type>test-jar</type>
